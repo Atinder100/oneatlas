@@ -11,6 +11,7 @@ export default function ModelsPage() {
   const [providerFilter, setProviderFilter] = useState("");
   const [capabilityFilter, setCapabilityFilter] = useState("");
   const [modelTypeFilter, setModelTypeFilter] = useState("");
+  const [sortOption, setSortOption] = useState("");
 
   const companyOptions = useMemo(
     () =>
@@ -47,7 +48,7 @@ export default function ModelsPage() {
   const matchingModels = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
 
-    return mockModels.filter((model) => {
+    const filteredModels = mockModels.filter((model) => {
       const matchesSearch =
         !normalizedQuery ||
         [model.name, model.company, model.provider].some((value) =>
@@ -71,12 +72,47 @@ export default function ModelsPage() {
         matchesModelType
       );
     });
+
+    if (!sortOption) {
+      return filteredModels;
+    }
+
+    const [sortField, sortDirection] = sortOption.split("-");
+
+    return [...filteredModels].sort((a, b) => {
+      const getValue = () => {
+        if (sortField === "price") {
+          return [a.inputPricePerMillion, b.inputPricePerMillion] as const;
+        }
+        if (sortField === "context") {
+          return [a.contextWindow, b.contextWindow] as const;
+        }
+
+        const getReleaseTimestamp = (releaseDate: string | null) =>
+          releaseDate ? new Date(`${releaseDate}T00:00:00Z`).getTime() : null;
+
+        return [
+          getReleaseTimestamp(a.releaseDate),
+          getReleaseTimestamp(b.releaseDate),
+        ] as const;
+      };
+
+      const [aValue, bValue] = getValue();
+
+      if (aValue === null && bValue === null) return 0;
+      if (aValue === null) return 1;
+      if (bValue === null) return -1;
+
+      const comparison = aValue - bValue;
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
   }, [
     searchQuery,
     companyFilter,
     providerFilter,
     capabilityFilter,
     modelTypeFilter,
+    sortOption,
   ]);
 
   const hasActiveFilters =
@@ -231,14 +267,45 @@ export default function ModelsPage() {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={clearFilters}
-            disabled={!hasActiveFilters}
-            className="mt-4 rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Clear filters
-          </button>
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <button
+              type="button"
+              onClick={clearFilters}
+              disabled={!hasActiveFilters}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Clear filters
+            </button>
+
+            <div className="w-full sm:w-72">
+              <label
+                htmlFor="model-sort"
+                className="mb-2 block text-sm font-medium text-slate-700"
+              >
+                Sort models
+              </label>
+              <select
+                id="model-sort"
+                value={sortOption}
+                onChange={(event) => setSortOption(event.target.value)}
+                className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-950 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+              >
+                <option value="">Default order</option>
+                <optgroup label="Input pricing per 1M tokens">
+                  <option value="price-asc">Input price: low to high</option>
+                  <option value="price-desc">Input price: high to low</option>
+                </optgroup>
+                <optgroup label="Context window">
+                  <option value="context-asc">Context: small to large</option>
+                  <option value="context-desc">Context: large to small</option>
+                </optgroup>
+                <optgroup label="Release date">
+                  <option value="release-asc">Release date: oldest first</option>
+                  <option value="release-desc">Release date: newest first</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
         </div>
 
         {matchingModels.length > 0 ? (
