@@ -30,6 +30,18 @@ export function Footer() {
           >
             Rankings
           </Link>
+          <Link
+            href="/labs"
+            className="text-sm text-slate-500 transition-colors hover:text-slate-950"
+          >
+            AI Labs
+          </Link>
+          <Link
+            href="/providers"
+            className="text-sm text-slate-500 transition-colors hover:text-slate-950"
+          >
+            Providers
+          </Link>
         </nav>
       </Container>
     </footer>
