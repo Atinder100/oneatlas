@@ -1,4 +1,5 @@
 import { Container } from "@/components/ui/Container";
+import { GlobalSearch } from "@/features/search/components/GlobalSearch";
 
 export default function Home() {
   return (
@@ -26,42 +27,9 @@ export default function Home() {
             tools shaping what comes next.
           </p>
 
-          <form
-            role="search"
-            action="#"
-            aria-label="Search AI models"
-            className="mx-auto mt-10 flex max-w-2xl flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-200/60 sm:flex-row"
-          >
-            <label htmlFor="model-search" className="sr-only">
-              Search for an AI model
-            </label>
-            <div className="relative flex-1">
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="m20 20-3.5-3.5" />
-              </svg>
-              <input
-                id="model-search"
-                name="model"
-                type="search"
-                placeholder="Search models, providers, or capabilities"
-                className="h-12 w-full rounded-xl border-0 bg-slate-50 pl-12 pr-4 text-slate-950 outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-            <button
-              type="submit"
-              className="h-12 rounded-xl bg-slate-950 px-6 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Search
-            </button>
-          </form>
+          <div className="mx-auto mt-10 max-w-2xl text-left">
+            <GlobalSearch query="" />
+          </div>
         </section>
       </Container>
     </main>

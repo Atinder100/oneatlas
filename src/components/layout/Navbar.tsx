@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const navigationItems = [
+  { label: "Search", href: "/search" },
   { label: "Models", href: "/models" },
   { label: "Compare", href: "/compare" },
   { label: "Rankings", href: "/rankings" },

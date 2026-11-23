@@ -9,8 +9,14 @@ const modelTypes = Array.from(
   new Set(mockModels.map((model) => model.modelType)),
 ).sort((a, b) => a.localeCompare(b));
 
-export function ProviderDirectory() {
-  const [searchQuery, setSearchQuery] = useState("");
+type ProviderDirectoryProps = {
+  initialQuery?: string;
+};
+
+export function ProviderDirectory({
+  initialQuery = "",
+}: ProviderDirectoryProps) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [modelTypeFilter, setModelTypeFilter] = useState("");
 
   const matchingProviders = useMemo(() => {

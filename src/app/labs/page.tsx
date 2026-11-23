@@ -1,7 +1,14 @@
 import { Container } from "@/components/ui/Container";
 import { LabDirectory } from "@/features/labs/components/LabDirectory";
 
-export default function LabsPage() {
+type LabsPageProps = {
+  searchParams: Promise<{ q?: string | string[] }>;
+};
+
+export default async function LabsPage({ searchParams }: LabsPageProps) {
+  const { q } = await searchParams;
+  const initialQuery = Array.isArray(q) ? q[0] ?? "" : q ?? "";
+
   return (
     <main className="flex-1 bg-slate-50">
       <Container className="py-12 sm:py-16">
@@ -18,7 +25,7 @@ export default function LabsPage() {
           </p>
         </header>
 
-        <LabDirectory />
+        <LabDirectory initialQuery={initialQuery} />
       </Container>
     </main>
   );

@@ -1,7 +1,16 @@
 import { Container } from "@/components/ui/Container";
 import { ProviderDirectory } from "@/features/providers/components/ProviderDirectory";
 
-export default function ProvidersPage() {
+type ProvidersPageProps = {
+  searchParams: Promise<{ q?: string | string[] }>;
+};
+
+export default async function ProvidersPage({
+  searchParams,
+}: ProvidersPageProps) {
+  const { q } = await searchParams;
+  const initialQuery = Array.isArray(q) ? q[0] ?? "" : q ?? "";
+
   return (
     <main className="flex-1 bg-slate-50">
       <Container className="py-12 sm:py-16">
@@ -18,7 +27,7 @@ export default function ProvidersPage() {
           </p>
         </header>
 
-        <ProviderDirectory />
+        <ProviderDirectory initialQuery={initialQuery} />
       </Container>
     </main>
   );

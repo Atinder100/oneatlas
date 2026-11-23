@@ -27,8 +27,12 @@ const focusAreas = Array.from(
   new Set(mockLabs.map((lab) => lab.focusArea)),
 ).sort((a, b) => a.localeCompare(b));
 
-export function LabDirectory() {
-  const [searchQuery, setSearchQuery] = useState("");
+type LabDirectoryProps = {
+  initialQuery?: string;
+};
+
+export function LabDirectory({ initialQuery = "" }: LabDirectoryProps) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [focusFilter, setFocusFilter] = useState("");
   const [modelTypeFilter, setModelTypeFilter] = useState("");
 
